@@ -1,0 +1,12 @@
+*.py[c|o]
+__pycache__
+.vscode
+*~
+*.cert
+.env-local
+test.py
+
+# Distribution
+dist
+*.egg-info
+pip-wheel-metadata
