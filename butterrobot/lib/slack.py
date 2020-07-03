@@ -19,10 +19,10 @@ class SlackAPI:
         pass
 
     @classmethod
-    async def send_message(cls, platform, message, thread: Optional[Text] = None):
+    async def send_message(cls, channel, message, thread: Optional[Text] = None):
         payload = {
             "text": message,
-            "platform": platform,
+            "channel": channel,
         }
 
         if thread:

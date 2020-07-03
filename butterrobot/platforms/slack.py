@@ -19,7 +19,7 @@ class SlackMethods(PlatformMethods):
         )
         try:
             await SlackAPI.send_message(
-                platform=message.chat, message=message.text, thread=message.reply_to
+                channel=message.chat, message=message.text, thread=message.reply_to
             )
         except SlackAPI.SlackClientError as error:
             logger.error(
@@ -65,6 +65,6 @@ class SlackPlatform(Platform):
             id=data["event"].get("thread_ts", data["event"]["ts"]),
             date=datetime.fromtimestamp(int(float(data["event"]["event_ts"]))),
             text=data["event"]["text"],
-            chat=data["event"]["platform"],
+            chat=data["event"]["channel"],
             raw=data,
         )

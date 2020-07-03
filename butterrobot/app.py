@@ -16,7 +16,7 @@ logger = structlog.get_logger(__name__)
 app = Quart(__name__)
 available_platforms = {}
 plugins = get_available_plugins()
-enabled_plugins = [plugin for plugin_name, plugin in plugins.items() if plugin in ENABLED_PLUGINS]
+enabled_plugins = [plugin for plugin_name, plugin in plugins.items() if plugin_name in ENABLED_PLUGINS]
 
 
 @app.before_serving
