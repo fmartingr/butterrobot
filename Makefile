@@ -3,10 +3,21 @@ setup:
 	poetry install
 
 docker@build:
-	docker build -t fmartingr/butterrobot .
+	docker build -t fmartingr/butterrobot -f docker/Dockerfile docker
 
-podman@build:
-	podman build -t fmartingr/butterrobot .
+docker@build-dev:
+	docker build -t fmartingr/butterrobot:dev -f Dockerfile.dev .
+
+docker@tag-dev:
+	docker tag fmartingr/butterrobot:dev registry.int.fmartingr.network/fmartingr/butterrobot:dev
+
+docker@push-dev:
+	docker push registry.int.fmartingr.network/fmartingr/butterrobot:dev
+
+docker@dev:
+	make docker@build-dev
+	make docker@tag-dev
+	make docker@push-dev
 
 docker@save:
 	make docker@build
