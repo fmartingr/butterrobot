@@ -1,0 +1,21 @@
+name: Build Docker master image
+
+on:
+  push:
+    branches:
+        - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker build --tag butterrobot:$(git rev-parse --short master) docker
+
+    - name: Push into Github packages
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u fmartingr --password-stdin
+        docker tag butterrobot:$(git rev-parse --short master) docker.pkg.github.com/fmartingr/butterrobot/butterrobot:$(git rev-parse --short master)
+        docker push docker.pkg.github.com/fmartingr/butterrobot/butterrobot:$(git rev-parse --short master)
