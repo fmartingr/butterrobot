@@ -1,0 +1,23 @@
+name: Build stable tag docker image
+
+on:
+  push:
+    branches:
+        - stable
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker build --tag butterrobot:$(git rev-parse --short HEAD) docker
+
+    - name: Push into Github packages (stable)
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u fmartingr --password-stdin
+        docker tag butterrobot:$(git rev-parse --short HEAD) docker.pkg.github.com/fmartingr/butterrobot/butterrobot:stable
+        docker tag butterrobot:$(git rev-parse --short HEAD) docker.pkg.github.com/fmartingr/butterrobot/butterrobot:$(cat pyproject.toml | grep version | cut -d "\"" -f 2)
+        docker push docker.pkg.github.com/fmartingr/butterrobot/butterrobot:stable
+        docker push docker.pkg.github.com/fmartingr/butterrobot/butterrobot:$(cat pyproject.toml | grep version | cut -d "\"" -f 2)
