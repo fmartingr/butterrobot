@@ -17,5 +17,5 @@ jobs:
     - name: Push into Github packages (latest)
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u fmartingr --password-stdin
-        docker tag butterrobot:$(git rev-parse --short HEAD) docker.pkg.github.com/fmartingr/butterrobot/butterrobot:master
-        docker push docker.pkg.github.com/fmartingr/butterrobot/butterrobot:master
+        docker tag butterrobot:$(git rev-parse --short HEAD) docker.pkg.github.com/fmartingr/butterrobot/butterrobot:latest
+        docker push docker.pkg.github.com/fmartingr/butterrobot/butterrobot:latest
