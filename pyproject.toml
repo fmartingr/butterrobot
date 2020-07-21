@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "butterrobot"
-version = "0.0.2a1"
+version = "0.0.2a2"
 description = "What is my purpose?"
 authors = ["Felipe Martin <me@fmartingr.com>"]
 license = "GPL-2.0"
