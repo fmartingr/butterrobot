@@ -1,6 +1,7 @@
 # Butter Robot
 
-[![Docker Repository on Quay](https://quay.io/repository/fmartingr/butterrobot/status "Docker Repository on Quay")](https://quay.io/repository/fmartingr/butterrobot)
+![Build stable tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20stable%20tag%20docker%20image/badge.svg?branch=stable)
+![Build latest tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20latest%20tag%20docker%20image/badge.svg?branch=master)
 
 Python framework to create bots for several platforms.
 
@@ -13,28 +14,22 @@ Python framework to create bots for several platforms.
 | Name            | Receive messages | Send messages |
 | --------------- | ---------------- | ------------- |
 | Slack (app)     | Yes              | Yes           |
-| Slack (webhook) | Planned          | No[^1]            |
 | Telegram        | Yes              | Yes           |
-
-[^1]: Slack webhooks only supports answering to incoming event, not
-      sending messages on demand.
 
 ## Provided plugins
 
-### Butter robot
-
-- [ ] Help
-- [ ] Usage
-- [ ] Changelog
 
 ### Development
 
-- [x] Ping
+#### Ping
+  
+  Say `!ping` to get response with time elapsed.
 
 ### Fun and entertainment
 
-- [ ] Dice roll
-- [x] Loquito
+#### Loquito
+
+  What happens when you say _"lo quito"_...? (Spanish pun)
 
 ## Installation
 
@@ -51,11 +46,12 @@ $ python -m butterrobot
 
 ### Containers
 
-The `fmartingr/butterrobot` container image is published on quay.io to
+The `fmartingr/butterrobot/butterrobot` container image is published on Github packages to
 use with your favourite tool:
 
 ```
-podman run -d --name butterrobot -p 8080:8080 quay.io/fmartingr/butterrobot
+docker pull docker.pkg.github.com/fmartingr/butterrobot/butterrobot:latest
+podman run -d --name fmartingr/butterrobot/butterrobot -p 8080:8080 
 ```
 
 ## Contributing
@@ -78,8 +74,6 @@ TELEGRAM_TOKEN=xxx
 ```
 
 And then you can run it directly with poetry
-
-TODO: Autoload .env-local
 
 ```
 docker run -it --rm --env-file .env-local -p 5000:5000 -v $PWD/butterrobot:/etc/app/butterrobot local/butterrobot python -m butterrobot
