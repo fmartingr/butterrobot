@@ -6,16 +6,11 @@ on:
       - stable
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
   publish:
     runs-on: ubuntu-latest
-    needs:
-      - prepare
     steps:
+    - uses: actions/checkout@v2
+
     - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
@@ -32,9 +27,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs:
-      - prepare
       - publish
     steps:
+    - uses: actions/checkout@v2
+
     - name: Build the Docker image
       run: docker build --tag butterrobot:$(git rev-parse --short HEAD) docker
 
