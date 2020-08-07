@@ -27,7 +27,7 @@ async def init_platforms():
             await platform.init(app=app)
             available_platforms[platform.ID] = platform
             logger.info("platform setup completed", platform=platform.ID)
-        except platform.platformInitError as error:
+        except platform.PlatformInitError as error:
             logger.error(f"platform init error", error=error, platform=platform.ID)
 
 
