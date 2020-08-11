@@ -55,7 +55,7 @@ async def incoming_platform_message_view(platform, path=None):
         )
         return {"error": str(error)}, 400
 
-    if not message:
+    if not message or message.from_bot:
         return {}
 
     for plugin in enabled_plugins:

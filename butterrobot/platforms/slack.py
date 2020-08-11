@@ -64,7 +64,7 @@ class SlackPlatform(Platform):
         return Message(
             id=data["event"].get("thread_ts", data["event"]["ts"]),
             author=data["event"]["user"],
-            is_bot="bot_id" in data["event"],
+            from_bot="bot_id" in data["event"],
             date=datetime.fromtimestamp(int(float(data["event"]["event_ts"]))),
             text=data["event"]["text"],
             chat=data["event"]["channel"],
