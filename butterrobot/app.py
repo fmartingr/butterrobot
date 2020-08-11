@@ -55,7 +55,7 @@ async def incoming_platform_message_view(platform, path=None):
                 result = [result]
             
             for message in result:
-                await available_platforms[platform].methods.send_message(result)
+                await available_platforms[platform].methods.send_message(message)
 
     return {}
 
