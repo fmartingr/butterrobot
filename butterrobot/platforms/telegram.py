@@ -61,6 +61,8 @@ class TelegramPlatform(Platform):
                 id=request_data["message"]["message_id"],
                 date=datetime.fromtimestamp(request_data["message"]["date"]),
                 text=str(request_data["message"]["text"]),
+                is_bot=request_data["message"]["from"]["is_bot"],
+                author=request_data["message"]["from"]["id"],
                 chat=str(request_data["message"]["chat"]["id"]),
                 raw=request_data,
             )

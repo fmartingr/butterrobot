@@ -17,7 +17,9 @@ logger = structlog.get_logger(__name__)
 app = Quart(__name__)
 available_platforms = {}
 plugins = get_available_plugins()
-enabled_plugins = [plugin for plugin_name, plugin in plugins.items() if plugin_name in ENABLED_PLUGINS]
+enabled_plugins = [
+    plugin for plugin_name, plugin in plugins.items() if plugin_name in ENABLED_PLUGINS
+]
 
 
 @app.before_serving
@@ -39,11 +41,18 @@ async def incoming_platform_message_view(platform, path=None):
         return {"error": "Unknown platform"}, 400
 
     try:
-        message = await available_platforms[platform].parse_incoming_message(request=request)
+        message = await available_platforms[platform].parse_incoming_message(
+            request=request
+        )
     except Platform.PlatformAuthResponse as response:
         return response.data, response.status_code
     except Exception as error:
-        logger.error(f"Error parsing message", platform=platform, error=error, traceback=traceback.format_exc())
+        logger.error(
+            f"Error parsing message",
+            platform=platform,
+            error=error,
+            traceback=traceback.format_exc(),
+        )
         return {"error": str(error)}, 400
 
     if not message:
@@ -53,7 +62,7 @@ async def incoming_platform_message_view(platform, path=None):
         if result := await plugin.on_message(message):
             if isinstance(result, Message):
                 result = [result]
-            
+
             for out_message in result:
                 await available_platforms[platform].methods.send_message(out_message)
 

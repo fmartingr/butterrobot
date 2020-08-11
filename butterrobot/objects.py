@@ -7,6 +7,8 @@ from typing import Text, Optional
 class Message:
     text: Text
     chat: Text
+    author: Text
+    is_bot: bool = False
     date: Optional[datetime] = None
     id: Optional[Text] = None
     reply_to: Optional[Text] = None
