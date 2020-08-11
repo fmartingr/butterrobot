@@ -4,13 +4,14 @@ from abc import abstractclassmethod
 
 import structlog
 
+from butterrobot.objects import Message
 
 logger = structlog.get_logger(__name__)
 
 
 class Plugin:
     @abstractclassmethod
-    def on_message(cls, message):
+    async def on_message(cls, message: Message):
         pass
 
 

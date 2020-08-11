@@ -31,7 +31,7 @@ class TelegramAPI:
             async with session.post(url, json=payload) as response:
                 response = await response.json()
                 if not response["ok"]:
-                    raise cls.TelegramClientError
+                    raise cls.TelegramClientError(response)
 
     @classmethod
     async def send_message(

@@ -7,6 +7,7 @@ import structlog
 
 import butterrobot.logging
 from butterrobot.config import SLACK_TOKEN, LOG_LEVEL, ENABLED_PLUGINS
+from butterrobot.objects import Message
 from butterrobot.plugins import get_available_plugins
 from butterrobot.platforms import PLATFORMS
 from butterrobot.platforms.base import Platform
@@ -50,7 +51,11 @@ async def incoming_platform_message_view(platform, path=None):
 
     for plugin in enabled_plugins:
         if result := await plugin.on_message(message):
-            await available_platforms[platform].methods.send_message(result)
+            if isinstance(result, Message):
+                result = [result]
+            
+            for message in result:
+                await available_platforms[platform].methods.send_message(result)
 
     return {}
 
