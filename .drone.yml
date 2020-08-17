@@ -1,0 +1,11 @@
+kind: pipeline
+name: Build latest docker image locally
+
+steps:
+- name: Build and publish
+  image: plugins/docker
+  settings:
+    repo: registry.int.fmartingr.network/fmartingr/butterrobot
+    tags: latest
+    registry: registry.int.fmartingr.network
+    dockerfile: docker/Dockerfile
