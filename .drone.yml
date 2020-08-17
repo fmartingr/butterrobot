@@ -8,5 +8,5 @@ steps:
     repo: registry.int.fmartingr.network/fmartingr/butterrobot
     tags: latest
     registry: registry.int.fmartingr.network
-    dockerfile: docker/Dockerfile
-    context: docker
+    dockerfile: Dockerfile.dev
+  
