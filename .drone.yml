@@ -9,3 +9,4 @@ steps:
     tags: latest
     registry: registry.int.fmartingr.network
     dockerfile: docker/Dockerfile
+    context: docker
