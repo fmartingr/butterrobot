@@ -1,12 +1,11 @@
 import asyncio
 import traceback
-import urllib.parse
 
 from quart import Quart, request
 import structlog
 
-import butterrobot.logging
-from butterrobot.config import SLACK_TOKEN, LOG_LEVEL, ENABLED_PLUGINS
+import butterrobot.logging  # noqa
+from butterrobot.config import ENABLED_PLUGINS
 from butterrobot.objects import Message
 from butterrobot.plugins import get_available_plugins
 from butterrobot.platforms import PLATFORMS
@@ -22,6 +21,12 @@ enabled_plugins = [
 ]
 
 
+async def handle_message(platform: str, message: Message):
+    for plugin in enabled_plugins:
+        async for response_message in plugin.on_message(message):
+            asyncio.ensure_future(available_platforms[platform].methods.send_message(response_message))
+
+
 @app.before_serving
 async def init_platforms():
     for platform in PLATFORMS.values():
@@ -31,7 +36,7 @@ async def init_platforms():
             available_platforms[platform.ID] = platform
             logger.info("platform setup completed", platform=platform.ID)
         except platform.PlatformInitError as error:
-            logger.error(f"platform init error", error=error, platform=platform.ID)
+            logger.error("Platform init error", error=error, platform=platform.ID)
 
 
 @app.route("/<platform>/incoming", methods=["POST"])
@@ -48,7 +53,7 @@ async def incoming_platform_message_view(platform, path=None):
         return response.data, response.status_code
     except Exception as error:
         logger.error(
-            f"Error parsing message",
+            "Error parsing message",
             platform=platform,
             error=error,
             traceback=traceback.format_exc(),
@@ -58,13 +63,7 @@ async def incoming_platform_message_view(platform, path=None):
     if not message or message.from_bot:
         return {}
 
-    for plugin in enabled_plugins:
-        if result := await plugin.on_message(message):
-            if isinstance(result, Message):
-                result = [result]
-
-            for out_message in result:
-                await available_platforms[platform].methods.send_message(out_message)
+    asyncio.ensure_future(handle_message(platform, message))
 
     return {}
 
