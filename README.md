@@ -21,15 +21,13 @@ Python framework to create bots for several platforms.
 
 ### Development
 
-#### Ping
-  
-  Say `!ping` to get response with time elapsed.
+- `!ping`: Say `!ping` to get response with time elapsed.
 
 ### Fun and entertainment
 
-#### Loquito
 
-  What happens when you say _"lo quito"_...? (Spanish pun)
+- Lo quito: What happens when you say _"lo quito"_...? (Spanish pun)
+- Dice: Put `!dice` and wathever roll you want to perform.
 
 ## Installation
 

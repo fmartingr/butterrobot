@@ -134,6 +134,26 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*"
 marker = "python_version >= \"3.4\""
 
 [[package]]
+name = "dice"
+version = "3.1.0"
+description = "A library for parsing and evaluating dice notation"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+docopt = ">=0.6.1"
+pyparsing = ">=2.4.1"
+
+[[package]]
+name = "docopt"
+version = "0.6.2"
+description = "Pythonic argument parser, that will make you smile"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "flake8"
 version = "3.8.3"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -461,6 +481,14 @@ python-versions = ">=3.5"
 marker = "python_version >= \"3.4\""
 
 [[package]]
+name = "pyparsing"
+version = "2.4.7"
+description = "Python parsing module"
+category = "main"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "quart"
 version = "0.11.5"
 description = "A Python ASGI web microframework with the same API as Flask"
@@ -628,7 +656,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.0"
 python-versions = "^3.7"
-content-hash = "ceba58ecf5ec2b4dd95cc58ca7122659610ad89052f420d2e9f22223aff38dd4"
+content-hash = "d5b0608322fa2ad2850a96e7959933dc45beba7feb265345a922e501f805f908"
 
 [metadata.files]
 aiofiles = [
@@ -691,6 +719,13 @@ colorama = [
 decorator = [
     {file = "decorator-4.4.2-py2.py3-none-any.whl", hash = "sha256:41fa54c2a0cc4ba648be4fd43cff00aedf5b9465c9bf18d64325bc225f08f760"},
     {file = "decorator-4.4.2.tar.gz", hash = "sha256:e3a62f0520172440ca0dcc823749319382e377f37f140a0b99ef45fecb84bfe7"},
+]
+dice = [
+    {file = "dice-3.1.0-py2.py3-none-any.whl", hash = "sha256:f7ec550f8a919b60688e355f5fc6acbf878a5d0930d11af261838b64b80d6aed"},
+    {file = "dice-3.1.0.tar.gz", hash = "sha256:edcf108e5372b40cfcb3795b0ff7fa0cf515cbf4bf5d720f1d412fd5a098f6aa"},
+]
+docopt = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},
@@ -848,6 +883,10 @@ pyflakes = [
 pygments = [
     {file = "Pygments-2.7.1-py3-none-any.whl", hash = "sha256:307543fe65c0947b126e83dd5a61bd8acbd84abec11f43caebaf5534cbc17998"},
     {file = "Pygments-2.7.1.tar.gz", hash = "sha256:926c3f319eda178d1bd90851e4317e6d8cdb5e292a3386aac9bd75eca29cf9c7"},
+]
+pyparsing = [
+    {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
+    {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 quart = [
     {file = "Quart-0.11.5-py3-none-any.whl", hash = "sha256:187427d1a2d7fed20dcb825dddbe20fd971efd7ec413639f95d2e28ff59a0cb1"},
