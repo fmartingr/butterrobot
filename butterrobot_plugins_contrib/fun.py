@@ -8,4 +8,4 @@ class LoquitoPlugin(Plugin):
     @classmethod
     async def on_message(cls, message):
         if "lo quito" in message.text.lower():
-            return Message(chat=message.chat, reply_to=message.id, text="Loquito tu.",)
+            yield Message(chat=message.chat, reply_to=message.id, text="Loquito tu.",)

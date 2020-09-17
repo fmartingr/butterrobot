@@ -12,6 +12,6 @@ class PingPlugin(Plugin):
         if message.text == "!ping":
             delta = datetime.now() - message.date
             delta_ms = delta.seconds * 1000 + delta.microseconds / 1000
-            return Message(
+            yield Message(
                 chat=message.chat, reply_to=message.id, text=f"pong! ({delta_ms}ms)",
             )
