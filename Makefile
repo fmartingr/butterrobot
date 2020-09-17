@@ -12,12 +12,12 @@ podman@tag-dev:
 	podman tag fmartingr/butterrobot:dev registry.int.fmartingr.network/fmartingr/butterrobot:dev
 
 podman@push-dev:
-	docker push registry.int.fmartingr.network/fmartingr/butterrobot:dev
+	podman push registry.int.fmartingr.network/fmartingr/butterrobot:dev
 
 podman@dev:
 	make podman@build-dev
 	make podman@tag-dev
-	make docker@push-dev
+	make podman@push-dev
 
 clean:
 	rm -rf dist
