@@ -44,7 +44,6 @@ class SlackPlatform(Platform):
     @classmethod
     async def parse_incoming_message(cls, request):
         data = await request.get_json()
-        logger.debug("Parsing message", platform=cls.ID, data=data)
 
         # Auth
         if data.get("token") != SLACK_TOKEN:
@@ -54,13 +53,15 @@ class SlackPlatform(Platform):
         if "challenge" in data:
             raise cls.PlatformAuthResponse(data={"challenge": data["challenge"]})
 
-        # Discard messages by bots
+        # Discard messages by webhooks and apps
         if "bot_id" in data["event"]:
+            logger.debug("Discarding message", data=data)
             return
 
         if data["event"]["type"] != "message":
             return
 
+        logger.debug("Parsing message", platform=cls.ID, data=data)
         return Message(
             id=data["event"].get("thread_ts", data["event"]["ts"]),
             author=data["event"]["user"],
