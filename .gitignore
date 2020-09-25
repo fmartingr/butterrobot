@@ -10,3 +10,6 @@ test.py
 dist
 *.egg-info
 pip-wheel-metadata
+
+# Github Codespaces
+pythonenv3.8
