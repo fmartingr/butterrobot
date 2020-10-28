@@ -1,6 +1,6 @@
 from typing import Optional, Text
 
-import aiohttp
+import requests
 import structlog
 
 from butterrobot.config import SLACK_BOT_OAUTH_ACCESS_TOKEN
@@ -19,7 +19,7 @@ class SlackAPI:
         pass
 
     @classmethod
-    async def send_message(cls, channel, message, thread: Optional[Text] = None):
+    def send_message(cls, channel, message, thread: Optional[Text] = None):
         payload = {
             "text": message,
             "channel": channel,
@@ -28,12 +28,11 @@ class SlackAPI:
         if thread:
             payload["thread_ts"] = thread
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
+        response = requestts.post(
                 f"{cls.BASE_URL}/chat.postMessage",
                 data=payload,
                 headers={"Authorization": f"Bearer {SLACK_BOT_OAUTH_ACCESS_TOKEN}"},
-            ) as response:
-                response = await response.json()
-                if not response["ok"]:
-                    raise cls.SlackClientError(response)
+            )
+        response_json = response.json()
+        if not response_json["ok"]:
+            raise cls.SlackClientError(response_json)

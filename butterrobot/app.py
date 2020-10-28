@@ -1,7 +1,6 @@
-import asyncio
 import traceback
 
-from quart import Quart, request
+from flask import Flask, request
 import structlog
 
 import butterrobot.logging  # noqa
@@ -13,7 +12,7 @@ from butterrobot.platforms.base import Platform
 
 
 logger = structlog.get_logger(__name__)
-app = Quart(__name__)
+app = Flask(__name__)
 available_platforms = {}
 plugins = get_available_plugins()
 enabled_plugins = [
@@ -21,18 +20,18 @@ enabled_plugins = [
 ]
 
 
-async def handle_message(platform: str, message: Message):
+def handle_message(platform: str, message: Message):
     for plugin in enabled_plugins:
-        async for response_message in plugin.on_message(message):
-            asyncio.ensure_future(available_platforms[platform].methods.send_message(response_message))
+        for response_message in plugin.on_message(message):
+            available_platforms[platform].methods.send_message(response_message)
 
 
-@app.before_serving
-async def init_platforms():
+@app.before_first_request
+def init_platforms():
     for platform in PLATFORMS.values():
         logger.debug("Setting up", platform=platform.ID)
         try:
-            await platform.init(app=app)
+            platform.init(app=app)
             available_platforms[platform.ID] = platform
             logger.info("platform setup completed", platform=platform.ID)
         except platform.PlatformInitError as error:
@@ -41,12 +40,12 @@ async def init_platforms():
 
 @app.route("/<platform>/incoming", methods=["POST"])
 @app.route("/<platform>/incoming/<path:path>", methods=["POST"])
-async def incoming_platform_message_view(platform, path=None):
+def incoming_platform_message_view(platform, path=None):
     if platform not in available_platforms:
         return {"error": "Unknown platform"}, 400
 
     try:
-        message = await available_platforms[platform].parse_incoming_message(
+        message = available_platforms[platform].parse_incoming_message(
             request=request
         )
     except Platform.PlatformAuthResponse as response:
@@ -63,7 +62,8 @@ async def incoming_platform_message_view(platform, path=None):
     if not message or message.from_bot:
         return {}
 
-    asyncio.ensure_future(handle_message(platform, message))
+    # TODO: make with rq/dramatiq
+    handle_message(platform, message)
 
     return {}
 

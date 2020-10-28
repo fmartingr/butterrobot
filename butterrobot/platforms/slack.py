@@ -13,12 +13,12 @@ logger = structlog.get_logger(__name__)
 
 class SlackMethods(PlatformMethods):
     @classmethod
-    async def send_message(self, message: Message):
+    def send_message(self, message: Message):
         logger.debug(
             "Outgoing message", message=message.__dict__, platform=SlackPlatform.ID
         )
         try:
-            await SlackAPI.send_message(
+            SlackAPI.send_message(
                 channel=message.chat, message=message.text, thread=message.reply_to
             )
         except SlackAPI.SlackClientError as error:
@@ -36,14 +36,14 @@ class SlackPlatform(Platform):
     methods = SlackMethods
 
     @classmethod
-    async def init(cls, app):
+    def init(cls, app):
         if not (SLACK_TOKEN and SLACK_BOT_OAUTH_ACCESS_TOKEN):
             logger.error("Missing token. platform not enabled.", platform=cls.ID)
             return
 
     @classmethod
-    async def parse_incoming_message(cls, request):
-        data = await request.get_json()
+    def parse_incoming_message(cls, request):
+        data = request.get_json()
 
         # Auth
         if data.get("token") != SLACK_TOKEN:

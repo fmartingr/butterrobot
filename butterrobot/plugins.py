@@ -11,7 +11,7 @@ logger = structlog.get_logger(__name__)
 
 class Plugin:
     @abstractclassmethod
-    async def on_message(cls, message: Message):
+    def on_message(cls, message: Message):
         pass
 
 

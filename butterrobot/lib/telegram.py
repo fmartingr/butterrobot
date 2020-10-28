@@ -1,4 +1,4 @@
-import aiohttp
+import requests
 import structlog
 
 from butterrobot.config import TELEGRAM_TOKEN
@@ -19,7 +19,7 @@ class TelegramAPI:
         pass
 
     @classmethod
-    async def set_webhook(cls, webhook_url, max_connections=40, allowed_updates=None):
+    def set_webhook(cls, webhook_url, max_connections=40, allowed_updates=None):
         allowed_updates = allowed_updates or cls.DEFAULT_ALLOWED_UPDATES
         url = f"{cls.BASE_URL}/setWebhook"
         payload = {
@@ -27,14 +27,13 @@ class TelegramAPI:
             "max_connections": max_connections,
             "allowed_updates": allowed_updates,
         }
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=payload) as response:
-                response = await response.json()
-                if not response["ok"]:
-                    raise cls.TelegramClientError(response)
+        response = requests.post(url, json=payload)
+        response_json = response.json()
+        if not response_json["ok"]:
+            raise cls.TelegramClientError(response_json)
 
     @classmethod
-    async def send_message(
+    def send_message(
         cls,
         chat_id,
         text,
@@ -52,8 +51,8 @@ class TelegramAPI:
             "disable_notification": disable_notification,
             "reply_to_message_id": reply_to_message_id,
         }
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=payload) as response:
-                response = await response.json()
-                if not response["ok"]:
-                    raise cls.TelegramClientError(response)
+        
+        response = requests.post(url, json=payload)
+        response_json = response.json()
+        if not response_json["ok"]:
+            raise cls.TelegramClientError(response_json)

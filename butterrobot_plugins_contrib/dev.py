@@ -8,7 +8,7 @@ class PingPlugin(Plugin):
     id = "contrib/dev/ping"
 
     @classmethod
-    async def on_message(cls, message):
+    def on_message(cls, message):
         if message.text == "!ping":
             delta = datetime.now() - message.date
             delta_ms = delta.seconds * 1000 + delta.microseconds / 1000
