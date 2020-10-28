@@ -13,11 +13,11 @@ logger = structlog.get_logger(__name__)
 
 class TelegramMethods(PlatformMethods):
     @classmethod
-    async def send_message(self, message: Message):
+    def send_message(self, message: Message):
         logger.debug(
             "Outgoing message", message=message.__dict__, platform=TelegramPlatform.ID
         )
-        await TelegramAPI.send_message(
+        TelegramAPI.send_message(
             chat_id=message.chat,
             text=message.text,
             reply_to_message_id=message.reply_to,
@@ -30,7 +30,7 @@ class TelegramPlatform(Platform):
     methods = TelegramMethods
 
     @classmethod
-    async def init(cls, app):
+    def init(cls, app):
         """
         Initializes the Telegram webhook endpoint to receive updates
         """
@@ -41,18 +41,18 @@ class TelegramPlatform(Platform):
 
         webhook_url = f"https://{HOSTNAME}/telegram/incoming/{TELEGRAM_TOKEN}"
         try:
-            await TelegramAPI.set_webhook(webhook_url)
+            TelegramAPI.set_webhook(webhook_url)
         except TelegramAPI.TelegramError as error:
             logger.error(f"Error setting Telegram webhook: {error}", platform=cls.ID)
             raise Platform.PlatformInitError()
 
     @classmethod
-    async def parse_incoming_message(cls, request):
+    def parse_incoming_message(cls, request):
         token = request.path.split("/")[-1]
         if token != TELEGRAM_TOKEN:
             raise cls.PlatformAuthError("Authentication error")
 
-        request_data = await request.get_json()
+        request_data = request.get_json()
         logger.debug("Parsing message", data=request_data, platform=cls.ID)
 
         if "text" in request_data["message"]:

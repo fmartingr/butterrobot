@@ -21,7 +21,7 @@ class Platform:
         status_code: int = 200
 
     @classmethod
-    async def init(cls, app):
+    def init(cls, app):
         pass
 
 

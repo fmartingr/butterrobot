@@ -12,7 +12,7 @@ logger = structlog.get_logger(__name__)
 
 class DebugMethods(PlatformMethods):
     @classmethod
-    async def send_message(self, message: Message):
+    def send_message(self, message: Message):
         logger.debug(
             "Outgoing message", message=message.__dict__, platform=DebugPlatform.ID
         )
@@ -24,8 +24,8 @@ class DebugPlatform(Platform):
     methods = DebugMethods
 
     @classmethod
-    async def parse_incoming_message(cls, request):
-        request_data = await request.get_json()
+    def parse_incoming_message(cls, request):
+        request_data = request.get_json()
         logger.debug("Parsing message", data=request_data, platform=cls.ID)
 
         return Message(
