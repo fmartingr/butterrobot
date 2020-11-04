@@ -30,8 +30,9 @@ ipdb = "^0.13.2"
 [tool.poetry.plugins]
 [tool.poetry.plugins."butterrobot.plugins"]
 "fun.loquito" = "butterrobot_plugins_contrib.fun:LoquitoPlugin"
-"dev.ping" = "butterrobot_plugins_contrib.dev:PingPlugin"
 "fun.dice" = "butterrobot_plugins_contrib.fun:DicePlugin"
+"fun.coin" = "butterrobot_plugins_contrib.fun:CoinPlugin"
+"dev.ping" = "butterrobot_plugins_contrib.dev:PingPlugin"
 
 [build-system]
 requires = ["poetry>=0.12"]
