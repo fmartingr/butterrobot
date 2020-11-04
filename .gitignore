@@ -13,3 +13,6 @@ pip-wheel-metadata
 
 # Github Codespaces
 pythonenv3.8
+
+# Butterrobot
+butterrobot.sqlite
