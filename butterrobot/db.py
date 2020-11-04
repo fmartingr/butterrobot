@@ -51,3 +51,26 @@ class User(Model):
         fields.update({"username": username})
         return cls._table.update(fields, ["username"])
 
+
+class Channel(Model):
+    _table = db["channels"]
+
+    @classmethod
+    def create(cls, provider, channel_id, enabled=False, channel_raw={}):
+        cls._table.insert({"provider": provider, "channel_id": channel_id, "enabled": enabled, "channel_raw": channel_raw})
+
+    @classmethod
+    def get(cls, username):
+        result = cls._table.find_one(username=username)
+        if not result:
+            raise cls.UserNotFound
+        return result
+
+    @classmethod
+    def delete(cls, username):
+        return cls._table.delete(username=username)
+
+    @classmethod
+    def update(cls, username, **fields):
+        fields.update({"username": username})
+        return cls._table.update(fields, ["username"])
