@@ -4,15 +4,18 @@ from flask import Flask, request
 import structlog
 
 import butterrobot.logging  # noqa
-from butterrobot.config import ENABLED_PLUGINS
+from butterrobot.config import ENABLED_PLUGINS, SECRET_KEY
 from butterrobot.objects import Message
 from butterrobot.plugins import get_available_plugins
 from butterrobot.platforms import PLATFORMS
 from butterrobot.platforms.base import Platform
+from butterrobot.admin.blueprint import admin as admin_bp
 
 
 logger = structlog.get_logger(__name__)
 app = Flask(__name__)
+app.secret_key = SECRET_KEY
+app.register_blueprint(admin_bp)
 available_platforms = {}
 plugins = get_available_plugins()
 enabled_plugins = [

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ButterRobot Admin</title>
+</head>
+<body>
+    <h1>ButterRobot Admin</h1>
+    {% if session.logged_in %}
+    <a href="{{ url_for("admin.index_view") }}">Index</a> |
+    <a href="{{ url_for("admin.plugin_list_view") }}">Plugins</a>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</body>
+</html>

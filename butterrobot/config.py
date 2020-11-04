@@ -9,6 +9,10 @@ LOG_LEVEL = os.environ.get("LOG_LEVEL", "ERROR")
 
 ENABLED_PLUGINS = os.environ.get("ENABLED_PLUGINS", "contrib/dev/ping").split(",")
 
+SECRET_KEY = os.environ.get("SECRET_KEY", "1234")
+
+# --- DATABASE ---------------------------------------------------------------------
+DATABASE_PATH = os.environ.get("DATABASE_PATH", "sqlite:///butterrobot.sqlite")
 
 # --- PLATFORMS ---------------------------------------------------------------------
 # ---

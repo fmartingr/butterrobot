@@ -1,0 +1,7 @@
+{% extends "_base.j2" %}
+
+{% block content %}
+{% for plugin in plugins %}
+<li>{{ plugin.id }}
+{% endfor %}
+{% endblock %}
