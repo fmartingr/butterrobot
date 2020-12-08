@@ -1,7 +1,33 @@
 {% extends "_base.j2" %}
 
 {% block content %}
-{% for plugin in plugins %}
-<li>{{ plugin.id }}
-{% endfor %}
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Plugin list
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for plugin in plugins %}
+                <tr>
+                    <td>{{ plugin.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

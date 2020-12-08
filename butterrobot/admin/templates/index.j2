@@ -1,15 +1,5 @@
 {% extends "_base.j2" %}
 
 {% block content %}
-<nav>
-{% for message in get_flashed_messages() %}
-<div class=flash>{{ message }}</div>
-{% endfor %}
 
-{% if not session.logged_in %}
-<a href="{{ url_for('admin.login_view') }}">log in</a>
-{% else %}
-Hello {{ session.user.username }}! - <a href="{{ url_for('admin.logout_view') }}">log out</a>
-{% endif %}
-</nav>
 {% endblock %}

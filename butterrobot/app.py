@@ -1,72 +1,56 @@
+import asyncio
 import traceback
+from dataclasses import asdict
+from functools import lru_cache
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import structlog
 
 import butterrobot.logging  # noqa
-from butterrobot.config import ENABLED_PLUGINS, SECRET_KEY
-from butterrobot.objects import Message
+from butterrobot.queue import q
+from butterrobot.db import ChannelQuery
+from butterrobot.config import SECRET_KEY, HOSTNAME
+from butterrobot.objects import Message, Channel
 from butterrobot.plugins import get_available_plugins
-from butterrobot.platforms import PLATFORMS
+from butterrobot.platforms import PLATFORMS, get_available_platforms
 from butterrobot.platforms.base import Platform
 from butterrobot.admin.blueprint import admin as admin_bp
 
 
+class ExternalProxyFix(object):
+    """
+    Custom proxy helper to get the external hostname from the `X-External-Host` header
+    used by one of the reverse proxies in front of this in production.
+    It does nothing if the header is not present.
+    """
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        host = environ.get('HTTP_X_EXTERNAL_HOST', '')
+        if host:
+            environ['HTTP_HOST'] = host
+        return self.app(environ, start_response)
+
+
+loop = asyncio.get_event_loop()
 logger = structlog.get_logger(__name__)
 app = Flask(__name__)
-app.secret_key = SECRET_KEY
+app.config.update(SECRET_KEY=SECRET_KEY)
 app.register_blueprint(admin_bp)
-available_platforms = {}
-plugins = get_available_plugins()
-enabled_plugins = [
-    plugin for plugin_name, plugin in plugins.items() if plugin_name in ENABLED_PLUGINS
-]
-
-
-def handle_message(platform: str, message: Message):
-    for plugin in enabled_plugins:
-        for response_message in plugin.on_message(message):
-            available_platforms[platform].methods.send_message(response_message)
-
-
-@app.before_first_request
-def init_platforms():
-    for platform in PLATFORMS.values():
-        logger.debug("Setting up", platform=platform.ID)
-        try:
-            platform.init(app=app)
-            available_platforms[platform.ID] = platform
-            logger.info("platform setup completed", platform=platform.ID)
-        except platform.PlatformInitError as error:
-            logger.error("Platform init error", error=error, platform=platform.ID)
+app.wsgi_app = ExternalProxyFix(app.wsgi_app)
 
 
 @app.route("/<platform>/incoming", methods=["POST"])
 @app.route("/<platform>/incoming/<path:path>", methods=["POST"])
 def incoming_platform_message_view(platform, path=None):
-    if platform not in available_platforms:
+    if platform not in get_available_platforms():
         return {"error": "Unknown platform"}, 400
 
-    try:
-        message = available_platforms[platform].parse_incoming_message(
-            request=request
-        )
-    except Platform.PlatformAuthResponse as response:
-        return response.data, response.status_code
-    except Exception as error:
-        logger.error(
-            "Error parsing message",
-            platform=platform,
-            error=error,
-            traceback=traceback.format_exc(),
-        )
-        return {"error": str(error)}, 400
-
-    if not message or message.from_bot:
-        return {}
-
-    # TODO: make with rq/dramatiq
-    handle_message(platform, message)
+    q.put({"platform": platform, "request": {
+        "path": request.path,
+        "json": request.get_json()
+    }})
 
     return {}
 

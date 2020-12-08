@@ -1,0 +1,140 @@
+{% extends "_base.j2" %}
+
+{% block content %}
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Channel: {{ channel.channel_name }}
+            </h2>
+        </div>
+    </div>
+</div>
+<div class="row row-cards">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-pills card-header-pills">
+                    <li class="nav-item">
+                        <form
+                            action="{{ url_for('admin.channel_detail_view', channel_id=channel.id) }}"
+                            method="POST">
+                            <input type="hidden" name="enabled" value="{{ 'false' if channel.enabled else 'true' }}" />
+                            <input class="btn btn-{% if channel.enabled %}danger{% else %}success{% endif %}"
+                                type="submit" value="{{ "Enable" if not channel.enabled else "Disable" }}">
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ url_for('admin.channel_delete_view', channel_id=channel.id) }}" method="POST">
+                            <input type="submit" value="Delete" class="btn btn-danger">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <table class="table table-vcenter card-table">
+                    <tbody>
+                        <tr>
+                            <th width="20%">ID</th>
+                            <td>{{ channel.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Platform</th>
+                            <td>{{ channel.platform }}</td>
+                        </tr>
+                        <tr>
+                            <th>Platform Channel ID</th>
+                            <td>{{ channel.platform_channel_id }}</td>
+                        </tr>
+                        <tr>
+                            <th>RAW</th>
+                            <td>
+                                <pre>{{ channel.channel_raw }}</pre>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Plugins</h3>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('admin.channel_plugin_list_view') }}" method="POST">
+                    <input type="hidden" name="channel_id" value="{{ channel.id }}" />
+                    <input type="hidden" name="enabled" value="y" />
+                    <p>
+                    <div class="row">
+                        <div class="col-4">
+                            Enable plugin
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select" name="plugin_id">
+                                {% for plugin in plugins.values() %}
+                                <option value="{{ plugin.id }}">{{ plugin.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <input type="submit" value="Enable" class="btn">
+                        </div>
+                    </div>
+                    </p>
+                </form>
+                <div>
+                    <table class="table table-vcenter card-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Configuration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for channel_plugin in channel.plugins.values() %}
+                            <tr>
+                                <td width="20%">{{ plugins[channel_plugin.plugin_id].name }}</td>
+                                <td>
+                                    <pre>{{ channel_plugin.config }}</pre>
+                                </td>
+                                <td width="20%">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <form
+                                                action="{{ url_for('admin.channel_plugin_detail_view', channel_plugin_id=channel_plugin.id) }}"
+                                                method="POST">
+                                                <input type="hidden" name="enabled"
+                                                    value="{{ 'false' if channel_plugin.enabled else 'true' }}" />
+                                                <input
+                                                    class="btn btn-{% if channel_plugin.enabled %}danger{% else %}success{% endif %}"
+                                                    type="submit"
+                                                    value="{{ "Enable" if not channel_plugin.enabled else "Disable" }}">
+                                            </form>
+                                        </div>
+                                        <div class="col-6">
+                                            <form
+                                                action="{{ url_for('admin.channel_plugin_delete_view', channel_plugin_id=channel_plugin.id) }}"
+                                                method="POST">
+                                                <input type="submit" value="Delete" class="btn btn-danger">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center">No plugin is enabled on this channel</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

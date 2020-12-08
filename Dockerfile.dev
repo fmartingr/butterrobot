@@ -3,18 +3,24 @@ FROM alpine:3.11
 ENV PYTHON_VERSION=3.8.2-r1
 ENV APP_PORT 8080
 ENV BUILD_DIR /tmp/build
+ENV APP_PATH /etc/butterrobot
 
 WORKDIR ${BUILD_DIR}
 COPY README.md ${BUILD_DIR}/README.md
 COPY poetry.lock ${BUILD_DIR}/poetry.lock
 COPY pyproject.toml ${BUILD_DIR}/pyproject.toml
-COPY ./butterrobot ${BUILD_DIR}/butterrobot
 COPY ./butterrobot_plugins_contrib ${BUILD_DIR}/butterrobot_plugins_contrib
+COPY ./butterrobot ${BUILD_DIR}/butterrobot
 RUN apk --update add curl python3-dev==${PYTHON_VERSION} gcc musl-dev libffi-dev openssl-dev && \
     pip3 install poetry && \
     poetry build && \
     pip3 install ${BUILD_DIR}/dist/butterrobot-*.tar.gz && \
-    rm -rf ${BUILD_DIR}
+    rm -rf ${BUILD_DIR} && \
+    mkdir ${APP_PATH} && \
+    chown -R 1000:1000 ${APP_PATH}
+
+USER 1000
+WORKDIR ${APP_PATH}
 COPY ./docker/bin/start-server.sh /usr/local/bin/start-server
 
 CMD ["/usr/local/bin/start-server"]
