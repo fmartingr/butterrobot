@@ -36,6 +36,7 @@ class Channel:
     @property
     def channel_name(self):
         from butterrobot.platforms import PLATFORMS
+
         return PLATFORMS[self.platform].parse_channel_name_from_raw(self.channel_raw)
 
 

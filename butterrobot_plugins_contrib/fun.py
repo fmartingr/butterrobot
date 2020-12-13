@@ -17,7 +17,9 @@ class LoquitoPlugin(Plugin):
     @classmethod
     def on_message(cls, message, **kwargs):
         if "lo quito" in message.text.lower():
-            yield Message(chat=message.chat, reply_to=message.id, text="Loquito tu.",)
+            yield Message(
+                chat=message.chat, reply_to=message.id, text="Loquito tu.",
+            )
 
 
 class DicePlugin(Plugin):
@@ -42,4 +44,8 @@ class CoinPlugin(Plugin):
     @classmethod
     def on_message(cls, message: Message, **kwargs):
         if message.text.startswith("!coin"):
-            yield Message(chat=message.chat, reply_to=message.id, text=random.choice(("heads", "tails")))
+            yield Message(
+                chat=message.chat,
+                reply_to=message.id,
+                text=random.choice(("heads", "tails")),
+            )

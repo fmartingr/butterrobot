@@ -3,7 +3,16 @@ import os.path
 from functools import wraps
 
 import structlog
-from flask import Blueprint, render_template, request, session, redirect, url_for, flash, g
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    session,
+    redirect,
+    url_for,
+    flash,
+    g,
+)
 
 from butterrobot.config import HOSTNAME
 from butterrobot.db import UserQuery, ChannelQuery, ChannelPluginQuery
@@ -19,14 +28,15 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for('admin.login_view', next=request.path))
+            return redirect(url_for("admin.login_view", next=request.path))
         return f(*args, **kwargs)
+
     return decorated_function
 
 
 @admin.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    user_id = session.get("user_id")
 
     if user_id is None:
         g.user = None
@@ -91,8 +101,7 @@ def channel_list_view():
 def channel_detail_view(channel_id):
     if request.method == "POST":
         ChannelQuery.update(
-            channel_id,
-            enabled=request.form["enabled"] == "true",
+            channel_id, enabled=request.form["enabled"] == "true",
         )
         flash("Channel updated", "success")
 
@@ -129,12 +138,12 @@ def channel_plugin_list_view():
 def channel_plugin_detail_view(channel_plugin_id):
     if request.method == "POST":
         ChannelPluginQuery.update(
-            channel_plugin_id,
-            enabled=request.form["enabled"] == "true",
+            channel_plugin_id, enabled=request.form["enabled"] == "true",
         )
         flash("Plugin updated", category="success")
 
     return redirect(request.headers.get("Referer"))
+
 
 @admin.route("/channelplugins/<channel_plugin_id>/delete", methods=["POST"])
 @login_required

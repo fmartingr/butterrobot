@@ -3,7 +3,9 @@ import os
 # --- Butter Robot -----------------------------------------------------------------
 DEBUG = os.environ.get("DEBUG", "n") == "y"
 
-HOSTNAME = os.environ.get("BUTTERROBOT_HOSTNAME", "butterrobot-dev.int.fmartingr.network")
+HOSTNAME = os.environ.get(
+    "BUTTERROBOT_HOSTNAME", "butterrobot-dev.int.fmartingr.network"
+)
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "ERROR")
 

@@ -8,12 +8,16 @@ from butterrobot.platforms.debug import DebugPlatform
 
 
 logger = structlog.get_logger(__name__)
-PLATFORMS = {platform.ID: platform for platform in (SlackPlatform, TelegramPlatform, DebugPlatform)}
+PLATFORMS = {
+    platform.ID: platform
+    for platform in (SlackPlatform, TelegramPlatform, DebugPlatform)
+}
 
 
 @lru_cache
 def get_available_platforms():
     from butterrobot.platforms import PLATFORMS
+
     available_platforms = {}
     for platform in PLATFORMS.values():
         logger.debug("Setting up", platform=platform.ID)

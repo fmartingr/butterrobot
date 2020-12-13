@@ -17,6 +17,7 @@ class Platform:
         """
         Used when the platform needs to make a response right away instead of async.
         """
+
         data: dict
         status_code: int = 200
 

@@ -35,6 +35,10 @@ class DebugPlatform(Platform):
             from_bot=bool(request_data.get("from_bot", False)),
             author=request_data.get("author", "Debug author"),
             chat=request_data.get("chat", "Debug chat ID"),
-            channel=Channel(platform=cls.ID, platform_channel_id=request_data.get("chat"), channel_raw={}),
+            channel=Channel(
+                platform=cls.ID,
+                platform_channel_id=request_data.get("chat"),
+                channel_raw={},
+            ),
             raw={},
         )

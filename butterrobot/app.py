@@ -23,13 +23,14 @@ class ExternalProxyFix(object):
     used by one of the reverse proxies in front of this in production.
     It does nothing if the header is not present.
     """
+
     def __init__(self, app):
         self.app = app
 
     def __call__(self, environ, start_response):
-        host = environ.get('HTTP_X_EXTERNAL_HOST', '')
+        host = environ.get("HTTP_X_EXTERNAL_HOST", "")
         if host:
-            environ['HTTP_HOST'] = host
+            environ["HTTP_HOST"] = host
         return self.app(environ, start_response)
 
 
@@ -47,10 +48,12 @@ def incoming_platform_message_view(platform, path=None):
     if platform not in get_available_platforms():
         return {"error": "Unknown platform"}, 400
 
-    q.put({"platform": platform, "request": {
-        "path": request.path,
-        "json": request.get_json()
-    }})
+    q.put(
+        {
+            "platform": platform,
+            "request": {"path": request.path, "json": request.get_json()},
+        }
+    )
 
     return {}
 

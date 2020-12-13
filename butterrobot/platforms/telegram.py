@@ -80,6 +80,8 @@ class TelegramPlatform(Platform):
                 from_bot=request["json"]["message"]["from"]["is_bot"],
                 author=request["json"]["message"]["from"]["id"],
                 chat=str(request["json"]["message"]["chat"]["id"]),
-                channel=cls.parse_channel_from_message(request["json"]["message"]["chat"]),
+                channel=cls.parse_channel_from_message(
+                    request["json"]["message"]["chat"]
+                ),
                 raw=request["json"],
             )

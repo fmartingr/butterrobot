@@ -51,7 +51,7 @@ class TelegramAPI:
             "disable_notification": disable_notification,
             "reply_to_message_id": reply_to_message_id,
         }
-        
+
         response = requests.post(url, json=payload)
         response_json = response.json()
         if not response_json["ok"]:

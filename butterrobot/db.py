@@ -10,7 +10,6 @@ from butterrobot.objects import Channel, ChannelPlugin, User
 db = dataset.connect(DATABASE_PATH)
 
 
-
 class Query:
     class NotFound(Exception):
         pass
@@ -27,7 +26,7 @@ class Query:
             yield cls.obj(**row)
 
     @classmethod
-    def get(cls, **kwargs) -> 'class':
+    def get(cls, **kwargs) -> "class":
         """
         Returns the object representation of an specific row in a table.
         Allows retrieving object by multiple columns.
@@ -61,7 +60,7 @@ class Query:
     @classmethod
     def update(cls, row_id, **fields):
         fields.update({"id": row_id})
-        return db[cls.tablename].update(fields, ("id", ))
+        return db[cls.tablename].update(fields, ("id",))
 
     @classmethod
     def delete(cls, id):
@@ -79,7 +78,7 @@ class UserQuery(Query):
         ).hex()
 
     @classmethod
-    def check_credentials(cls, username, password) -> Union[User, 'False']:
+    def check_credentials(cls, username, password) -> Union[User, "False"]:
         user = db[cls.tablename].find_one(username=username)
         if user:
             hash_password = cls._hash_password(password)
@@ -125,7 +124,9 @@ class ChannelQuery(Query):
 
         plugins = ChannelPluginQuery.get_from_channel_id(result["id"])
 
-        return cls.obj(plugins={plugin.plugin_id: plugin for plugin in plugins}, **result)
+        return cls.obj(
+            plugins={plugin.plugin_id: plugin for plugin in plugins}, **result
+        )
 
     @classmethod
     def delete(cls, _id):

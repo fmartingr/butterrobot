@@ -15,7 +15,9 @@ q = queue.Queue()
 
 def handle_message(platform: str, request: dict):
     try:
-        message = get_available_platforms()[platform].parse_incoming_message(request=request)
+        message = get_available_platforms()[platform].parse_incoming_message(
+            request=request
+        )
     except Platform.PlatformAuthResponse as response:
         return response.data, response.status_code
     except Exception as error:
@@ -36,7 +38,9 @@ def handle_message(platform: str, request: dict):
         channel = ChannelQuery.get_by_platform(platform, message.chat)
     except ChannelQuery.NotFound:
         # If channel is still not present on the database, create it (defaults to disabled)
-        channel = ChannelQuery.create(platform, message.chat, channel_raw=message.channel.channel_raw)
+        channel = ChannelQuery.create(
+            platform, message.chat, channel_raw=message.channel.channel_raw
+        )
 
     if not channel.enabled:
         return
@@ -45,7 +49,9 @@ def handle_message(platform: str, request: dict):
         if not channel.has_enabled_plugin(plugin_id):
             continue
 
-        for response_message in get_available_plugins()[plugin_id].on_message(message, plugin_config=channel_plugin.config):
+        for response_message in get_available_plugins()[plugin_id].on_message(
+            message, plugin_config=channel_plugin.config
+        ):
             get_available_platforms()[platform].methods.send_message(response_message)
 
 
@@ -54,6 +60,7 @@ def worker_thread():
         item = q.get()
         handle_message(item["platform"], item["request"])
         q.task_done()
+
 
 # turn-on the worker thread
 worker = threading.Thread(target=worker_thread, daemon=True).start()
