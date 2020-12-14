@@ -19,6 +19,9 @@ podman@dev:
 	make podman@tag-dev
 	make podman@push-dev
 
+test:
+	poetry run pytest --cov=butterrobot --cov=butterrobot_plugins_contrib
+
 clean:
 	rm -rf dist
 	rm -rf butterrobot.egg-info
