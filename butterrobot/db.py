@@ -32,7 +32,7 @@ class Query:
         Allows retrieving object by multiple columns.
         Raises `NotFound` error if query return no results.
         """
-        row = db[cls.tablename].find_one()
+        row = db[cls.tablename].find_one(**kwargs)
         if not row:
             raise cls.NotFound
         return cls.obj(**row)
@@ -109,14 +109,14 @@ class ChannelQuery(Query):
 
     @classmethod
     def get(cls, _id):
-        channel = super().get(_id)
+        channel = super().get(id=_id)
         plugins = ChannelPluginQuery.get_from_channel_id(_id)
         channel.plugins = {plugin.plugin_id: plugin for plugin in plugins}
         return channel
 
     @classmethod
     def get_by_platform(cls, platform, platform_channel_id):
-        result = cls.tablename.find_one(
+        result = db[cls.tablename].find_one(
             platform=platform, platform_channel_id=platform_channel_id
         )
         if not result:
@@ -154,8 +154,8 @@ class ChannelPluginQuery(Query):
 
     @classmethod
     def get_from_channel_id(cls, channel_id):
-        yield from [cls.obj(**row) for row in cls.tablename.find(channel_id=channel_id)]
+        yield from [cls.obj(**row) for row in db[cls.tablename].find(channel_id=channel_id)]
 
     @classmethod
     def delete_by_channel(cls, channel_id):
-        cls.tablename.delete(channel_id=channel_id)
+        cls.delete(channel_id=channel_id)

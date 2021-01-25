@@ -8,6 +8,7 @@ import structlog
 
 from butterrobot.objects import Message
 
+
 logger = structlog.get_logger(__name__)
 
 
@@ -63,4 +64,5 @@ def get_available_plugins():
                 module=ep.module_name,
             )
 
+    logger.info("Plugins loaded", plugins=list(plugins.keys()))
     return plugins

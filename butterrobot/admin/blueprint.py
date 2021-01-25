@@ -42,7 +42,7 @@ def load_logged_in_user():
         g.user = None
     else:
         try:
-            user = UserQuery.get(user_id)
+            user = UserQuery.get(id=user_id)
             g.user = user
         except UserQuery.NotFound:
             g.user = None

@@ -82,7 +82,7 @@ class SlackPlatform(Platform):
         logger.debug("Parsing message", platform=cls.ID, data=data)
         return Message(
             id=data["event"].get("thread_ts", data["event"]["ts"]),
-            author=data["event"]["user"],
+            author=data["event"].get("user"),
             from_bot="bot_id" in data["event"],
             date=datetime.fromtimestamp(int(float(data["event"]["event_ts"]))),
             text=data["event"]["text"],
