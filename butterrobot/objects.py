@@ -28,7 +28,7 @@ class Channel:
 
     def has_enabled_plugin(self, plugin_id):
         if plugin_id not in self.plugins:
-            logger.info("No enabled!", plugin_id=plugin_id, plugins=self.plugins)
+            logger.debug("No enabled!", plugin_id=plugin_id, plugins=self.plugins)
             return False
 
         return self.plugins[plugin_id].enabled

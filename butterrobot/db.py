@@ -1,5 +1,4 @@
 import hashlib
-import os
 from typing import Union
 
 import dataset
@@ -158,4 +157,5 @@ class ChannelPluginQuery(Query):
 
     @classmethod
     def delete_by_channel(cls, channel_id):
-        cls.delete(channel_id=channel_id)
+        channel_plugins = cls.get_from_channel_id(channel_id)
+        [cls.delete(item.id) for item in channel_plugins]

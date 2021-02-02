@@ -41,6 +41,7 @@ def incoming_platform_message_view(platform, path=None):
 
     return {}
 
+
 @app.route("/healthz")
 def healthz():
     return {}

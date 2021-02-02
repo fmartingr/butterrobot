@@ -29,8 +29,6 @@ def handle_message(platform: str, request: dict):
         )
         return
 
-    logger.info("Received request", platform=platform, message=message)
-
     if not message or message.from_bot:
         return
 

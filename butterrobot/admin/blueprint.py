@@ -52,7 +52,6 @@ def load_logged_in_user():
 @login_required
 def index_view():
     if not session.get("logged_in", False):
-        logger.info(url_for("admin.login_view"))
         return redirect(url_for("admin.login_view"))
     return redirect(url_for("admin.channel_list_view"))
 
@@ -92,7 +91,6 @@ def plugin_list_view():
 @admin.route("/channels")
 @login_required
 def channel_list_view():
-    channels = ChannelQuery.all()
     return render_template("channel_list.j2", channels=ChannelQuery.all())
 
 
@@ -148,6 +146,6 @@ def channel_plugin_detail_view(channel_plugin_id):
 @admin.route("/channelplugins/<channel_plugin_id>/delete", methods=["POST"])
 @login_required
 def channel_plugin_delete_view(channel_plugin_id):
-    ChannelPluginQuery.delete(channel_plugin_id=channel_plugin_id)
+    ChannelPluginQuery.delete(channel_plugin_id)
     flash("Plugin removed", category="success")
     return redirect(request.headers.get("Referer"))
