@@ -88,7 +88,7 @@ class UserQuery(Query):
     @classmethod
     def create(cls, **kwargs):
         kwargs["password"] = cls._hash_password(kwargs["password"])
-        super().create(**kwargs)
+        return super().create(**kwargs)
 
 
 class ChannelQuery(Query):
