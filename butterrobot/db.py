@@ -3,8 +3,8 @@ from typing import Union
 
 import dataset
 
-from butterrobot.config import DATABASE_PATH, SECRET_KEY
-from butterrobot.objects import Channel, ChannelPlugin, User
+from butterrobot.config import SECRET_KEY, DATABASE_PATH
+from butterrobot.objects import User, Channel, ChannelPlugin
 
 db = dataset.connect(DATABASE_PATH)
 
@@ -25,7 +25,7 @@ class Query:
             yield cls.obj(**row)
 
     @classmethod
-    def get(cls, **kwargs) -> "class":
+    def get(cls, **kwargs):
         """
         Returns the object representation of an specific row in a table.
         Allows retrieving object by multiple columns.
@@ -153,7 +153,9 @@ class ChannelPluginQuery(Query):
 
     @classmethod
     def get_from_channel_id(cls, channel_id):
-        yield from [cls.obj(**row) for row in db[cls.tablename].find(channel_id=channel_id)]
+        yield from [
+            cls.obj(**row) for row in db[cls.tablename].find(channel_id=channel_id)
+        ]
 
     @classmethod
     def delete_by_channel(cls, channel_id):

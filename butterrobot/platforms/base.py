@@ -36,7 +36,7 @@ class Platform:
 
     @classmethod
     @abstractmethod
-    def parse_incoming_message(cls, request) -> 'Message':
+    def parse_incoming_message(cls, request):
         """
         Parses the incoming request and returns a :class:`butterrobot.objects.Message` instance.
         """
@@ -52,7 +52,7 @@ class Platform:
 
     @classmethod
     @abstractmethod
-    def parse_channel_from_message(cls, channel_raw) -> 'Channel':
+    def parse_channel_from_message(cls, channel_raw):
         """
         Extracts the Channel raw data from the message received in the incoming webhook.
         """
@@ -62,6 +62,6 @@ class Platform:
 class PlatformMethods:
     @classmethod
     @abstractmethod
-    def send_message(cls, message: 'Message'):
+    def send_message(cls, message):
         """Method used to send a message via the platform"""
         pass
