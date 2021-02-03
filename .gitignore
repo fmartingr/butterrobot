@@ -5,6 +5,7 @@ __pycache__
 *.cert
 .env-local
 test.py
+.coverage
 
 # Distribution
 dist
@@ -13,3 +14,6 @@ pip-wheel-metadata
 
 # Github Codespaces
 pythonenv3.8
+
+# Butterrobot
+*.sqlite*

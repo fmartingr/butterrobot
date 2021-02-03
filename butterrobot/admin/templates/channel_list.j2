@@ -1,0 +1,45 @@
+{% extends "_base.j2" %}
+
+{% block content %}
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Channel list
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>Platform</th>
+                    <th>Channel name</th>
+                    <th>Channel ID</th>
+                    <th>Enabled</th>
+                    <th class="w-1"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for channel in channels %}
+                <tr>
+                    <td>{{ channel.platform }}</td>
+                    <td>{{ channel.channel_name }}</td>
+                    <td class="text-muted">
+                        {{ channel.platform_channel_id }}
+                    </td>
+                    <td class="text-muted">{{ channel.enabled }}</td>
+                    <td>
+                        <a href="{{ url_for("admin.channel_detail_view", channel_id=channel.id) }}">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

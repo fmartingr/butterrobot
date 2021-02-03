@@ -4,7 +4,7 @@ import structlog
 
 from butterrobot.platforms.base import Platform, PlatformMethods
 from butterrobot.config import SLACK_TOKEN, SLACK_BOT_OAUTH_ACCESS_TOKEN
-from butterrobot.objects import Message
+from butterrobot.objects import Message, Channel
 from butterrobot.lib.slack import SlackAPI
 
 
@@ -42,8 +42,26 @@ class SlackPlatform(Platform):
             return
 
     @classmethod
+    def parse_channel_name_from_raw(cls, channel_raw):
+        return channel_raw["name"]
+
+    @classmethod
+    def parse_channel_from_message(cls, message):
+        # Call different APIs for a channel or DM
+        if message["event"]["channel_type"] == "im":
+            chat_raw = SlackAPI.get_user_info(message["event"]["user"])
+        else:
+            chat_raw = SlackAPI.get_conversations_info(message["event"]["channel"])
+
+        return Channel(
+            platform=cls.ID,
+            platform_channel_id=message["event"]["channel"],
+            channel_raw=chat_raw,
+        )
+
+    @classmethod
     def parse_incoming_message(cls, request):
-        data = request.get_json()
+        data = request["json"]
 
         # Auth
         if data.get("token") != SLACK_TOKEN:
@@ -58,16 +76,30 @@ class SlackPlatform(Platform):
             logger.debug("Discarding message", data=data)
             return
 
-        if data["event"]["type"] != "message":
+        logger.debug("Parsing message", platform=cls.ID, data=data)
+
+        if data["event"]["type"] not in ("message", "message.groups"):
             return
 
-        logger.debug("Parsing message", platform=cls.ID, data=data)
-        return Message(
+        # Surprisingly, this *can* happen.
+        if "text" not in data["event"]:
+            return
+
+        message = Message(
             id=data["event"].get("thread_ts", data["event"]["ts"]),
-            author=data["event"]["user"],
+            author=data["event"].get("user"),
             from_bot="bot_id" in data["event"],
             date=datetime.fromtimestamp(int(float(data["event"]["event_ts"]))),
             text=data["event"]["text"],
             chat=data["event"]["channel"],
+            channel=cls.parse_channel_from_message(data),
             raw=data,
         )
+
+        logger.info(
+            "New message",
+            platform=message.channel.platform,
+            channel=cls.parse_channel_name_from_raw(message.channel.channel_raw),
+        )
+
+        return message

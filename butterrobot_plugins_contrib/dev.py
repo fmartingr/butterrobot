@@ -5,10 +5,11 @@ from butterrobot.objects import Message
 
 
 class PingPlugin(Plugin):
-    id = "contrib/dev/ping"
+    name = "Ping command"
+    id = "contrib.dev.ping"
 
     @classmethod
-    def on_message(cls, message):
+    def on_message(cls, message, **kwargs):
         if message.text == "!ping":
             delta = datetime.now() - message.date
             delta_ms = delta.seconds * 1000 + delta.microseconds / 1000

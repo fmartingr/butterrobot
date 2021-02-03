@@ -14,7 +14,9 @@ structlog.configure(
         structlog.processors.StackInfoRenderer(),
         structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M.%S"),
         structlog.processors.format_exc_info,
-        structlog.dev.ConsoleRenderer() if DEBUG else structlog.processors.JSONRenderer(),
+        structlog.dev.ConsoleRenderer()
+        if DEBUG
+        else structlog.processors.JSONRenderer(),
     ],
     context_class=dict,
     logger_factory=structlog.stdlib.LoggerFactory(),

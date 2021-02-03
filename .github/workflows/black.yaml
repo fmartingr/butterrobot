@@ -1,0 +1,27 @@
+name: Black
+
+on:
+  push:
+    branches: [ master, stable ]
+  pull_request:
+    branches: [ master, stable ]
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install black
+
+    - name: Black check
+      run: |
+        black --check butterrobot

@@ -1,7 +1,9 @@
 # Butter Robot
 
-![Build stable tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20stable%20tag%20docker%20image/badge.svg?branch=stable)
-![Build latest tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20latest%20tag%20docker%20image/badge.svg?branch=master)
+| Stable | Master |
+| --- | --- |
+| ![Build stable tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20stable%20tag%20docker%20image/badge.svg?branch=stable) | ![Build latest tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20latest%20tag%20docker%20image/badge.svg?branch=master) |
+| ![Pytest](https://github.com/fmartingr/butterrobot/workflows/Pytest/badge.svg?branch=stable) | ![Pytest](https://github.com/fmartingr/butterrobot/workflows/Pytest/badge.svg?branch=master) |
 
 Python framework to create bots for several platforms.
 
@@ -9,25 +11,9 @@ Python framework to create bots for several platforms.
 
 > What is my purpose?
 
-## Supported platforms
+## Documentation
 
-| Name            | Receive messages | Send messages |
-| --------------- | ---------------- | ------------- |
-| Slack (app)     | Yes              | Yes           |
-| Telegram        | Yes              | Yes           |
-
-## Provided plugins
-
-
-### Development
-
-- `!ping`: Say `!ping` to get response with time elapsed.
-
-### Fun and entertainment
-
-
-- Lo quito: What happens when you say _"lo quito"_...? (Spanish pun)
-- Dice: Put `!dice` and wathever roll you want to perform.
+[Go to documentation](./docs)
 
 ## Installation
 
@@ -44,12 +30,11 @@ $ python -m butterrobot
 
 ### Containers
 
-The `fmartingr/butterrobot/butterrobot` container image is published on Github packages to
-use with your favourite tool:
+The `fmartingr/butterrobot/butterrobot` container image is published on Github packages to use with your favourite tool:
 
 ```
 docker pull docker.pkg.github.com/fmartingr/butterrobot/butterrobot:latest
-podman run -d --name fmartingr/butterrobot/butterrobot -p 8080:8080 
+podman run -d --name fmartingr/butterrobot/butterrobot -p 8080:8080
 ```
 
 ## Contributing
@@ -62,8 +47,7 @@ cd butterrobot
 poetry install
 ```
 
-Create a `.env-local` file with the required environment variables,
-you have [an example file](.env-example).
+Create a `.env-local` file with the required environment variables, you have [an example file](.env-example).
 
 ```
 SLACK_TOKEN=xxx
