@@ -139,7 +139,7 @@ class ChannelPluginQuery(Query):
 
     @classmethod
     def create(cls, channel_id, plugin_id, enabled=False, config={}):
-        if cls.exists(id=channel_id, plugin_id=plugin_id):
+        if cls.exists(channel_id=channel_id, plugin_id=plugin_id):
             raise cls.Duplicated
 
         params = {
