@@ -1,0 +1,41 @@
+{% extends "_base.j2" %}
+
+{% block content %}
+<div class="page-header d-print-none">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Channel list
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Channel ID</th>
+                    <th>Plugin ID</th>
+                    <th>Enabled</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for channel_plugin in channel_plugins %}
+                <tr>
+                    <td>{{ channel_plugin.id }}</td>
+                    <td>{{ channel_plugin.channel_id }}</td>
+                    <td class="text-muted">
+                        {{ channel_plugin.plugin_id }}
+                    </td>
+                    <td class="text-muted">{{ channel_plugin.enabled }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,23 +1,20 @@
-import json
 import os.path
 from functools import wraps
 
 import structlog
 from flask import (
     Blueprint,
-    render_template,
+    g,
+    flash,
     request,
     session,
-    redirect,
     url_for,
-    flash,
-    g,
+    redirect,
+    render_template,
 )
 
-from butterrobot.config import HOSTNAME
 from butterrobot.db import UserQuery, ChannelQuery, ChannelPluginQuery
 from butterrobot.plugins import get_available_plugins
-
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
 admin.template_folder = os.path.join(os.path.dirname(__name__), "templates")
@@ -99,7 +96,8 @@ def channel_list_view():
 def channel_detail_view(channel_id):
     if request.method == "POST":
         ChannelQuery.update(
-            channel_id, enabled=request.form["enabled"] == "true",
+            channel_id,
+            enabled=request.form["enabled"] == "true",
         )
         flash("Channel updated", "success")
 
@@ -117,18 +115,24 @@ def channel_delete_view(channel_id):
     return redirect(url_for("admin.channel_list_view"))
 
 
-@admin.route("/channelplugins", methods=["POST"])
+@admin.route("/channelplugins", methods=["GET", "POST"])
 @login_required
 def channel_plugin_list_view():
-    data = request.form
-    try:
-        ChannelPluginQuery.create(
-            data["channel_id"], data["plugin_id"], enabled=data["enabled"] == "y"
-        )
-        flash(f"Plugin {data['plugin_id']} added to the channel", "success")
-    except ChannelPluginQuery.Duplicated:
-        flash(f"Plugin {data['plugin_id']} is already present on the channel", "error")
-    return redirect(request.headers.get("Referer"))
+    if request.method == "POST":
+        data = request.form
+        try:
+            ChannelPluginQuery.create(
+                data["channel_id"], data["plugin_id"], enabled=data["enabled"] == "y"
+            )
+            flash(f"Plugin {data['plugin_id']} added to the channel", "success")
+        except ChannelPluginQuery.Duplicated:
+            flash(
+                f"Plugin {data['plugin_id']} is already present on the channel", "error"
+            )
+        return redirect(request.headers.get("Referer"))
+
+    channel_plugins = ChannelPluginQuery.all()
+    return render_template("channel_plugins_list.j2", channel_plugins=channel_plugins)
 
 
 @admin.route("/channelplugins/<channel_plugin_id>", methods=["GET", "POST"])
@@ -136,7 +140,8 @@ def channel_plugin_list_view():
 def channel_plugin_detail_view(channel_plugin_id):
     if request.method == "POST":
         ChannelPluginQuery.update(
-            channel_plugin_id, enabled=request.form["enabled"] == "true",
+            channel_plugin_id,
+            enabled=request.form["enabled"] == "true",
         )
         flash("Plugin updated", category="success")
 
