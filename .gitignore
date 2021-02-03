@@ -16,4 +16,4 @@ pip-wheel-metadata
 pythonenv3.8
 
 # Butterrobot
-butterrobot.sqlite
+*.sqlite*
