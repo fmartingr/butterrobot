@@ -4,7 +4,7 @@ from datetime import datetime
 import structlog
 
 from butterrobot.platforms.base import Platform, PlatformMethods
-from butterrobot.objects import Message
+from butterrobot.objects import Message, Channel
 
 
 logger = structlog.get_logger(__name__)
@@ -25,7 +25,7 @@ class DebugPlatform(Platform):
 
     @classmethod
     def parse_incoming_message(cls, request):
-        request_data = request.get_json()
+        request_data = request["json"]
         logger.debug("Parsing message", data=request_data, platform=cls.ID)
 
         return Message(
@@ -35,5 +35,10 @@ class DebugPlatform(Platform):
             from_bot=bool(request_data.get("from_bot", False)),
             author=request_data.get("author", "Debug author"),
             chat=request_data.get("chat", "Debug chat ID"),
+            channel=Channel(
+                platform=cls.ID,
+                platform_channel_id=request_data.get("chat"),
+                channel_raw={},
+            ),
             raw={},
         )

@@ -5,7 +5,7 @@ import structlog
 from butterrobot.platforms.base import Platform, PlatformMethods
 from butterrobot.config import TELEGRAM_TOKEN, HOSTNAME
 from butterrobot.lib.telegram import TelegramAPI
-from butterrobot.objects import Message
+from butterrobot.objects import Message, Channel
 
 
 logger = structlog.get_logger(__name__)
@@ -47,22 +47,41 @@ class TelegramPlatform(Platform):
             raise Platform.PlatformInitError()
 
     @classmethod
+    def parse_channel_name_from_raw(cls, channel_raw):
+        if channel_raw["id"] < 0:
+            return channel_raw["title"]
+        else:
+            if channel_raw["username"]:
+                return f"@{channel_raw['username']}"
+        return f"{channel_raw['first_name']} {channel_raw['last_name']}"
+
+    @classmethod
+    def parse_channel_from_message(cls, channel_raw):
+        return Channel(
+            platform=cls.ID,
+            platform_channel_id=channel_raw["id"],
+            channel_raw=channel_raw,
+        )
+
+    @classmethod
     def parse_incoming_message(cls, request):
-        token = request.path.split("/")[-1]
+        token = request["path"].split("/")[-1]
         if token != TELEGRAM_TOKEN:
             raise cls.PlatformAuthError("Authentication error")
 
-        request_data = request.get_json()
-        logger.debug("Parsing message", data=request_data, platform=cls.ID)
+        logger.debug("Parsing message", data=request["json"], platform=cls.ID)
 
-        if "text" in request_data["message"]:
+        if "text" in request["json"]["message"]:
             # Ignore all messages but text messages
             return Message(
-                id=request_data["message"]["message_id"],
-                date=datetime.fromtimestamp(request_data["message"]["date"]),
-                text=str(request_data["message"]["text"]),
-                from_bot=request_data["message"]["from"]["is_bot"],
-                author=request_data["message"]["from"]["id"],
-                chat=str(request_data["message"]["chat"]["id"]),
-                raw=request_data,
+                id=request["json"]["message"]["message_id"],
+                date=datetime.fromtimestamp(request["json"]["message"]["date"]),
+                text=str(request["json"]["message"]["text"]),
+                from_bot=request["json"]["message"]["from"]["is_bot"],
+                author=request["json"]["message"]["from"]["id"],
+                chat=str(request["json"]["message"]["chat"]["id"]),
+                channel=cls.parse_channel_from_message(
+                    request["json"]["message"]["chat"]
+                ),
+                raw=request["json"],
             )

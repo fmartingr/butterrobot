@@ -1,4 +1,4 @@
-from abc import abstractclassmethod
+from abc import abstractmethod
 from dataclasses import dataclass
 
 
@@ -17,19 +17,51 @@ class Platform:
         """
         Used when the platform needs to make a response right away instead of async.
         """
+
         data: dict
         status_code: int = 200
 
     @classmethod
     def init(cls, app):
+        """
+        Initialises the platform.
+
+        Used at the application launch to prepare anything required for
+        the platform to work..
+
+        It receives the flask application via parameter in case the platform
+        requires for custom webservice endpoints or configuration.
+        """
+        pass
+
+    @classmethod
+    @abstractmethod
+    def parse_incoming_message(cls, request):
+        """
+        Parses the incoming request and returns a :class:`butterrobot.objects.Message` instance.
+        """
+        pass
+
+    @classmethod
+    @abstractmethod
+    def parse_channel_name_from_raw(cls, channel_raw) -> str:
+        """
+        Extracts the Channel name from :class:`butterrobot.objects.Channel.channel_raw`.
+        """
+        pass
+
+    @classmethod
+    @abstractmethod
+    def parse_channel_from_message(cls, channel_raw):
+        """
+        Extracts the Channel raw data from the message received in the incoming webhook.
+        """
         pass
 
 
 class PlatformMethods:
-    @abstractclassmethod
+    @classmethod
+    @abstractmethod
     def send_message(cls, message):
-        pass
-
-    @abstractclassmethod
-    def reply_message(cls, message, reply_to):
+        """Method used to send a message via the platform"""
         pass
