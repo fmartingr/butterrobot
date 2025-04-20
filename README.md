@@ -1,5 +1,9 @@
 # Butter Robot
 
+> [!WARNING]
+> This chatbot was functional at the time but my main programming language changed from Python to Golang so I archived this repository.
+> I'm currently working on a refactored version of this in Golang [at this repository](https://git.nakama.town/fmartingr/butterrobot).
+
 | Stable | Master |
 | --- | --- |
 | ![Build stable tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20stable%20tag%20docker%20image/badge.svg?branch=stable) | ![Build latest tag docker image](https://github.com/fmartingr/butterrobot/workflows/Build%20latest%20tag%20docker%20image/badge.svg?branch=master) |
